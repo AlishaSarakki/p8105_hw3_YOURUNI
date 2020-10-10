@@ -7,6 +7,23 @@ library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(ggridges)
+library(patchwork)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
@@ -106,7 +123,6 @@ This data was collected over 5 weeks from a 63 year-old male diagnosed with CHF.
 
 
 group by and summarize into table
-
 ```{r}
 agg_accel = 
 accel_data %>% 
@@ -121,12 +137,14 @@ agg_accel
 Fridays tend to be a high activity day, while weekends seem to have lower activity. Saturdays especially have a lower activity count. Weeks 1, 2, and 5 seem to have a high activity count, with the exception of Saturday in Week 5. Week 4 seems to have a lower relative activity count as compared to other weeks of the same month. An activity count of 1440 is repeated twice - this number may have some significance.  
 
 
+
 Single-panel plot
 ```{r}
-accel_data
-  # a single-panel plot for 24 hours of each day - your x axis is going to be minute of the day, with a line for each day of the week. Can try taking the average for each day of the week given that there is no clear/consistent trend in the data. 
+
+
 ```
 
 
 ## Problem 3
+
 
