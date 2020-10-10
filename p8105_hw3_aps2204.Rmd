@@ -11,16 +11,16 @@ library(patchwork)
 library(rnoaa)
 
 knitr::opts_chunk$set(
-  fig.width = 6,
-  fig.asp = .6,
-  out.width = "90%"
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
 )
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 options(
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
 )
 
 scale_colour_discrete = scale_colour_viridis_d
@@ -168,26 +168,60 @@ skimr::skim(ny_noaa)
 ```
 This dataset from the National Oceanic and Atmospheric Association describes the weather in New York from all NY weather stations between January 1st, 1981 to December 31st, 2010. The data contains `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. Variables include station ID, date of data collection, and measurements of precipitation, snow, snow depth, and maximum + minimum temperatures per day. There is significant missing data, especially as related to minimum and maximum temperatures - both tmin and tmax have over 1 million missing values.
 
+
+
 Clean data and create separate variables for year, month, day; adjust variables to proper units and find mode
 ```{r clean data, separate vars, and adjust vars, find mode}
-tidy_noaa =
+tidy_noaa = (
   ny_noaa %>% 
-  separate(date, into = c("year", "month", "day"), convert = TRUE) %>% 
+  separate(date, into = c("year", "month", "day"), convert = "TRUE") %>% 
   mutate(
   tmin = as.double(tmin),
   tmax = as.double(tmax)
 ) %>% 
   mutate(
-  (tmin = tmin/10),
-  (tmax = tmax/10),
-  (snwd = snwd/10)
-  ) %>% 
+  (tmin = (tmin/10)),
+  (tmax = (tmax/10)),
+  (prcp = (prcp/10))
+  ))
+
+skimr::skim(tidy_noaa)
+
+  tidy_noaa %>% 
   count(snow) %>% 
   arrange(snow)
 
 tidy_noaa
 ```
 The most commonly observed value in this dataset is a snowfall amount of 0mm. This is likely because snow typically only falls within a narrow timeframe of the year (select days in winter). 
+
+
+
+Problem 3, part 2
+```{r 2-panel plot}
+  tidy_noaa %>% 
+  mutate(month = as.character(month)) %>% 
+  filter(month == c(1,7)) %>%
+  group_by(id, year, month) %>% 
+  summarize(mean_tmax = mean(tmax)) %>% 
+  ggplot(aes(x = year, y = mean_tmax)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(se = FALSE) +
+ facet_grid(. ~month) +
+  labs(
+    title = "Avg Max Temps in January and July from 1981 to 2010",
+    x = "year",
+    y = "mean maximum temperature",
+    caption = "data from New York NOAA"
+  )
+
+# I was unable to troubleshoot the temperature issue. I recognize that there is no place inhabitable by humans at 300 degrees celsius (that's a bit crispy), and I don't think that even Siberia gets to -100 degrees celsius. I apologize. 
+```
+```
+Observations include: July has higher maximum temperatures, on average, than January. Temperatures seem to fluctuate in cycles. 1994 appears to have been a particularly cold winter. January temperatures seem to fluctuate more than those in July. 
+
+
+
 
 
 
