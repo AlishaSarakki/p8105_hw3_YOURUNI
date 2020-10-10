@@ -8,6 +8,7 @@ library(dplyr)
 library(ggplot2)
 library(ggridges)
 library(patchwork)
+library(rnoaa)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -96,7 +97,7 @@ instacart %>%
 ## Problem 2
 
 Import and tidy data
-```{r}
+```{r import and tidy accel_data}
 accel_data = 
   read_csv("./data/accel_data.csv") %>% 
   janitor::clean_names() %>% 
@@ -115,7 +116,8 @@ day %in% c("Saturday","Sunday") ~ "weekend")) %>%
   mutate(
   day = forcats::fct_relevel(day, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
   )
-accel_data
+  
+  
 ```
 
 This data was collected over 5 weeks from a 63 year-old male diagnosed with CHF. Variables in this dataset include week, weekday/end (here,coded as weekday_end), day (Sunday - Saturday), day of the month (day_id), and activity count. This dataset contains `r nrow(accel_data)` observations, which were collected at each minute of the day, every day, for 5 weeks.
@@ -123,7 +125,7 @@ This data was collected over 5 weeks from a 63 year-old male diagnosed with CHF.
 
 
 group by and summarize into table
-```{r}
+```{r accel_data table}
 agg_accel = 
 accel_data %>% 
   group_by(day_id, day, week) %>% 
@@ -139,12 +141,30 @@ Fridays tend to be a high activity day, while weekends seem to have lower activi
 
 
 Single-panel plot
-```{r}
-
+```{r single panel plot of accel_data}
+accel_data %>%
+  ggplot(aes(x = minute_of_day, y = activity_count)) +
+  geom_line(aes(), alpha = .3) +
+  labs(
+    title = "Activity Plotted Over 5-Week Period",
+    x = "Minute of Day",
+    y = "Activity Count",
+    caption = "data from accelerometer dataset"
+  ) +
+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 ```
 
 
 ## Problem 3
 
+Load and tidy data
+```{r load and tidy nyc_noaa data}
+library(p8105.datasets)
+data("ny_noaa")
+
+skimr::skim(ny_noaa)
+
+```
+This dataset from the National Oceanic and Atmospheric Association describes the weather in New York from all NY weather stations between January 1st, 1981 to December 31st, 2010. The data contains `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. Variables include station ID, date of data collection, and measurements of precipitation, snow, snow depth, and maximum + minimum temperatures per day. There is significant missing data, especially as related to minimum and maximum temperatures - both tmin and tmax have over 1 million missing values.
 
