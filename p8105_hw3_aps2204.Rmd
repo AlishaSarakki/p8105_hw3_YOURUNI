@@ -223,7 +223,7 @@ Observations include: July has higher maximum temperatures, on average, than Jan
 
 
 tmax vs. tmin
-```{r}
+```{r 3i}
 tidy_noaa %>% 
 ggplot(aes(x = tmin, y = tmax)) +
 geom_hex() +
@@ -232,6 +232,18 @@ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
 
+snowfall distribution
+```{r 3ii}
+tidy_noaa %>% 
+filter(
+snow > 0, 
+snow < 100
+) %>% 
+group_by(year) %>% 
+ggplot(aes(x = snow, y = snow)) +
+geom_boxplot() + 
+facet_wrap(.~ year)
+```
 
 
 
