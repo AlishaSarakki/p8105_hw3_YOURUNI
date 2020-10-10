@@ -101,19 +101,25 @@ day %in% c("Saturday","Sunday") ~ "weekend")) %>%
 accel_data
 ```
 
-Total Activity variable + table
+This data was collected over 5 weeks from a 63 year-old male diagnosed with CHF. Variables in this dataset include week, weekday/end (here,coded as weekday_end), day (Sunday - Saturday), day of the month (day_id), and activity count. This dataset contains `r nrow(accel_data)` observations, which were collected at each minute of the day, every day, for 5 weeks.
+
+
+
+group by and summarize into table
 
 ```{r}
 agg_accel = 
 accel_data %>% 
-  group_by(day_id) %>% 
+  group_by(day_id, day, week) %>% 
   summarize(activity = sum(activity_count)) %>% 
+  
 
 knitr::kable()
 
 agg_accel
 ```
-Trends include increased activity count at the beginning and middle of the month, with some slight increase towards the end. The last few days of the month have a marked decrease in activity count.
+Fridays tend to be a high activity day, while weekends seem to have lower activity. Saturdays especially have a lower activity count. Weeks 1, 2, and 5 seem to have a high activity count, with the exception of Saturday in Week 5. Week 4 seems to have a lower relative activity count as compared to other weeks of the same month. An activity count of 1440 is repeated twice - this number may have some significance.  
+
 
 Single-panel plot
 ```{r}
