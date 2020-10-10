@@ -110,4 +110,12 @@ accel_data %>%
 rename(agg_accel, "activity_count" = "activity_1401") %>% 
   knitr::kable()
 ```
+Trends include increased activity count at the beginning and middle of the month, with some slight increase towards the end. The last few days of the month have a marked decrease in activity count.
+
+Single-panel plot
+```{r}
+accel_data
+  # a single-panel plot for 24 hours of each day - your x axis is going to be minute of the day, with a line for each day of the week. Can try taking the average for each day of the week given that there is no clear/consistent trend in the data. 
+```
+
 
