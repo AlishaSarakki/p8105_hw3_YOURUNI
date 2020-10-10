@@ -168,3 +168,26 @@ skimr::skim(ny_noaa)
 ```
 This dataset from the National Oceanic and Atmospheric Association describes the weather in New York from all NY weather stations between January 1st, 1981 to December 31st, 2010. The data contains `r nrow(ny_noaa)` rows and `r ncol(ny_noaa)` columns. Variables include station ID, date of data collection, and measurements of precipitation, snow, snow depth, and maximum + minimum temperatures per day. There is significant missing data, especially as related to minimum and maximum temperatures - both tmin and tmax have over 1 million missing values.
 
+Clean data and create separate variables for year, month, day; adjust variables to proper units and find mode
+```{r clean data, separate vars, and adjust vars, find mode}
+tidy_noaa =
+  ny_noaa %>% 
+  separate(date, into = c("year", "month", "day"), convert = TRUE) %>% 
+  mutate(
+  tmin = as.double(tmin),
+  tmax = as.double(tmax)
+) %>% 
+  mutate(
+  (tmin = tmin/10),
+  (tmax = tmax/10),
+  (snwd = snwd/10)
+  ) %>% 
+  count(snow) %>% 
+  arrange(snow)
+
+tidy_noaa
+```
+The most commonly observed value in this dataset is a snowfall amount of 0mm. This is likely because snow typically only falls within a narrow timeframe of the year (select days in winter). 
+
+
+
