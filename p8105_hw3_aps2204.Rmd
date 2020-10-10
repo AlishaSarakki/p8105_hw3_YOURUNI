@@ -94,19 +94,17 @@ day %in% c("Monday","Tuesday","Wednesday","Thursday","Friday") ~ "weekday",
 day %in% c("Saturday","Sunday") ~ "weekend")) %>% 
   relocate("week", "weekday_end", "day", "day_id", "minute_of_day", "activity_count") %>% 
    mutate_at(vars("weekday_end","day"), as.factor) %>% 
-  mutate_at(vars("day_id", "week", "activity_count"), as.double)
-    
+  mutate_at(vars("day_id", "week", "activity_count"), as.double) %>% 
+  mutate(
+  day = forcats::fct_relevel(day, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+  )
 accel_data
 ```
 
 Total Activity variable + table
 
 ```{r}
-agg_accel = 
-accel_data %>% 
-  group_by(day_id)
 
-agg_accel
 ```
 Trends include increased activity count at the beginning and middle of the month, with some slight increase towards the end. The last few days of the month have a marked decrease in activity count.
 
