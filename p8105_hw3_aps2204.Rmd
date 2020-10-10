@@ -5,6 +5,8 @@ output: github_document
 ```{r}
 library(tidyverse)
 library(dplyr)
+library(ggplot2)
+library(ggridges)
 ```
 
 
@@ -81,20 +83,31 @@ Import and tidy data
 accel_data = 
   read_csv("./data/accel_data.csv") %>% 
   janitor::clean_names() %>% 
+  mutate_at(vars(activity_1:activity_1400), as.numeric) %>% 
   pivot_longer(
     activity_1:activity_1400,
     names_to = "minute_of_day",
     values_to = "activity_count",
     names_prefix = "activity") %>% 
- mutate(weekday=case_when(
+ mutate(weekday = case_when(
 day %in% c("Monday","Tuesday","Wednesday","Thursday","Friday") ~ "weekday",
-day %in% c("Saturday","Sunday") ~ "weekend"
-)
-)
-    
-
+day %in% c("Saturday","Sunday") ~ "weekend")) %>% 
+  relocate("week", "weekday", "day", "day_id", "minute_of_day", "activity_count") %>% 
+   mutate_at(vars("weekday","day"), as.factor) %>% 
+  mutate_at(vars("day_id"), as.numeric)
     
 accel_data
 ```
 
+Total Activity variable + table
+
+```{r}
+agg_accel = 
+accel_data %>% 
+  group_by(day_id) %>% 
+  summarise(across(starts_with('activity_1401'), sum)) 
+
+rename(agg_accel, "activity_count" = "activity_1401") %>% 
+  knitr::kable()
+```
 
