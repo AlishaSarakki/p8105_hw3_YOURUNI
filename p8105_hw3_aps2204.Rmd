@@ -104,7 +104,14 @@ accel_data
 Total Activity variable + table
 
 ```{r}
+agg_accel = 
+accel_data %>% 
+  group_by(day_id) %>% 
+  summarize(activity = sum(activity_count)) %>% 
 
+knitr::kable()
+
+agg_accel
 ```
 Trends include increased activity count at the beginning and middle of the month, with some slight increase towards the end. The last few days of the month have a marked decrease in activity count.
 
