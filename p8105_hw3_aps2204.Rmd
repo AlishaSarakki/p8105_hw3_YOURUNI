@@ -129,12 +129,10 @@ group by and summarize into table
 agg_accel = 
 accel_data %>% 
   group_by(day_id, day, week) %>% 
-  summarize(activity = sum(activity_count)) %>% 
+  summarize(activity = sum(activity_count)) 
   
 
-knitr::kable()
-
-agg_accel
+knitr::kable(agg_accel)
 ```
 Fridays tend to be a high activity day, while weekends seem to have lower activity. Saturdays especially have a lower activity count. Weeks 1, 2, and 5 seem to have a high activity count, with the exception of Saturday in Week 5. Week 4 seems to have a lower relative activity count as compared to other weeks of the same month. An activity count of 1440 is repeated twice - this number may have some significance.  
 
@@ -224,16 +222,18 @@ Observations include: July has higher maximum temperatures, on average, than Jan
 
 tmax vs. tmin
 ```{r 3i}
+tmax_plot = (
 tidy_noaa %>% 
 ggplot(aes(x = tmin, y = tmax)) +
 geom_hex() +
 theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-
+)
 ```
 
 
 snowfall distribution
 ```{r 3ii}
+snowfall_plot = (
 tidy_noaa %>% 
 filter(
 snow > 0, 
@@ -242,8 +242,14 @@ snow < 100
 group_by(year) %>% 
 ggplot(aes(x = snow, y = snow)) +
 geom_boxplot() + 
-facet_wrap(.~ year)
+facet_wrap(.~ year))
 ```
 
+
+patchwork the plots!
+```{r putting it together}
+library(patchwork)
+tmax_plot + snowfall_plot
+```
 
 
