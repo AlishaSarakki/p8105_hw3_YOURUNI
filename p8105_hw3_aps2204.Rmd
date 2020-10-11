@@ -9,7 +9,6 @@ library(ggplot2)
 library(ggridges)
 library(patchwork)
 library(rnoaa)
-install.packages("hexbin", repos ="http://cran.us.r-project.org")
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = .6,
